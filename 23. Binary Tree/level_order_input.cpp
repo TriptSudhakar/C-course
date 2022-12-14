@@ -39,7 +39,7 @@ void printLeafNode(Node* root){
 	if(root == NULL){
 		return;
 	}
-	if(root->left == NULL and root->right == NULL){
+	if(root->left == NULL && root->right == NULL){
 		cout<<root->data<<" ";
 	}
 	printLeafNode(root->left);
