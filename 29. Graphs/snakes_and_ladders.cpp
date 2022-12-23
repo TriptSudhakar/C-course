@@ -13,39 +13,13 @@ public:
 
     void addEdge(T x,T y)
     {
-        l[x].push_back(y);
-        l[y].push_back(x);
+        l[x].push_back(y); //directed graph
     }
 
-    void bfs(T src)
-    {
-        map<T,bool> visited;
-        queue<T> q;
-
-        q.push(src);
-        visited[src] = true;
-
-        while(!q.empty())
-        {
-            T node = q.front();
-            cout<<node<<" ";
-            q.pop();
-            for(auto nbr:l[node])
-            {
-                if(!visited[nbr])
-                {
-                    q.push(nbr);
-                    // mark the nbr as visited
-                    visited[nbr] = true;
-                }
-            }
-        }
-        cout<<'\n';
-    }
-
-    void sssp(T src)
+    int sssp(T src,T dest)
     {
         map<T,int> dist;
+        map<T,T> parent;
         queue<T> q;
 
         // All the other will have INT_MAX
@@ -57,6 +31,7 @@ public:
 
         q.push(src);
         dist[src] = 0;
+        parent[src] = src;
 
         while(!q.empty())
         {
@@ -70,28 +45,49 @@ public:
                     q.push(nbr);
                     // mark the nbr as visited
                     dist[nbr] = dist[node]+1;
+                    parent[nbr] = node;
                 }
             }
         }
 
-        for(auto node_pair:l)
+        T temp = dest;
+        while(temp!=src)
         {
-            T node = node_pair.first;
-            int d = dist[node];
-            cout<<"Node "<<node<<" Distance from source "<<d<<'\n';
+            cout<<temp<<"<--";
+            temp = parent[temp];
         }
+        cout<<src<<'\n';
+        return dist[dest];
     }
 };
 int main()
 {
+    // Input
+    int board[50] = {0}; //records the jumps
+    board[2] = 13;
+    board[5] = 2;
+    board[9] = 18;
+    board[18] = 11;
+    board[17] = -13;
+    board[20] = -14;
+    board[24] = -8;
+    board[25] = 10;
+    board[32] = -2;
+    board[34] = -22;
+
     Graph<int> g;
-    g.addEdge(0,1);
-    g.addEdge(0,3);
-    g.addEdge(1,2);
-    g.addEdge(2,3);
-    g.addEdge(3,4);
-    g.addEdge(4,5);
-    g.bfs(0);
-    g.sssp(0);
+    for(int i=0;i<36;i++)
+    {
+        for(int dice = 1;dice<=6;dice++)
+        {
+            int j = i + dice + board[i+dice];
+            if(j<=36)
+            {
+                g.addEdge(i,j);
+            }
+        }
+    }
+    g.addEdge(36,36);
+    cout<<g.sssp(0,36)<<'\n';
     return 0;
 }
