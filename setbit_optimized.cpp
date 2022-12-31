@@ -12,6 +12,8 @@ int main()
         count++;
         cout<<"Iteration no "<<count<<endl;
     }
+    // another method to count setbits
+    // int setbits = __builtin_popcount(n);
     cout<<"Setbits : "<<count<<endl;
     return 0;
 }
